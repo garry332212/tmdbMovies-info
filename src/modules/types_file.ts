@@ -1,5 +1,5 @@
 
-export interface Movie {
+export interface DataTypes {
   id: number;
   title: string;
   poster_path: string | null;
@@ -8,16 +8,8 @@ export interface Movie {
   name: string;
   backdrop_path:string;
   media_type:string
- release_date:string
- first_air_date:string
-}
-
-
-export interface TVShow {
-
-  poster_path: string | null;
-  overview: string;
-  vote_average: number;
+  release_date:string
+  first_air_date:string
 }
 
 export interface ItemsCategory {
@@ -35,5 +27,16 @@ export const createDisplayItems = (
   apiEndpoint: `${apiEndpoint}`,
   itemHeading,
 });
+
+  //!Function to change the date format
+  export function getFormattedDate(dateString: string | number | Date) {
+    const options = {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    } as Intl.DateTimeFormatOptions;
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", options);
+  }
 
 

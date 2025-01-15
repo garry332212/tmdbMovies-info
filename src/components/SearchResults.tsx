@@ -1,17 +1,13 @@
 import React from "react";
-import noImage from "../assets/no-image.jpg";
+import noImage from "../assets/noImage.jpg";
 import noResult from "../assets/no-result.png";
-import { Movie } from "../modules/types_file";
+import { getFormattedDate, DataTypes } from "../modules/types_file";
 
 interface SearchProptType {
-  searchResults: Movie[];
+  searchResults: DataTypes[];
 }
 
 const SearchResults: React.FC<SearchProptType> = ({ searchResults }) => {
-  //* Helper function to extract the year from a date string
-  const changeYearOnly = (showYear: string) => {
-    return new Date(showYear).getFullYear();
-  };
 
   return (
     <>
@@ -27,13 +23,13 @@ const SearchResults: React.FC<SearchProptType> = ({ searchResults }) => {
                 <img
                   src={`https://image.tmdb.org/t/p/w200/${item.poster_path}`}
                   alt={item.title || item.name}
-                  className="rounded-md border-2 border-green-500 main-image"
+                  className="rounded-md  border-0 w-60 h-[20rem] animatetext"
                   onError={(event) => {
                     event.currentTarget.src = noImage;
                   }}
                 />
 
-                <div className="flex flex-col justify-center items-center">
+                <div className="flex flex-col justify-center items-center pb-4">
                   <p className="text-xl p-2 font-bold relative top-1 text-nowrap truncate-text">
                     {item.title || item.name}
                   </p>
@@ -44,9 +40,9 @@ const SearchResults: React.FC<SearchProptType> = ({ searchResults }) => {
 
                   <p className="text-sm text-gray-400">
                     {item.release_date
-                      ? changeYearOnly(item.release_date)
+                      ? getFormattedDate(item.release_date)
                       : item.first_air_date
-                      ? changeYearOnly(item.first_air_date)
+                      ? getFormattedDate(item.first_air_date)
                       : "Unknown"}
                   </p>
                 </div>

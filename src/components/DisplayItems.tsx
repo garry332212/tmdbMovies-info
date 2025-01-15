@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react";
 
 import axios from "axios";
-import { ItemsCategory, Movie } from "../modules/types_file";
+import { ItemsCategory, DataTypes } from "../modules/types_file";
+import noImage from "../assets/noImage.jpg";
 
 //*Types for passing props that are coming from HOME/Movies/TvShows
 interface DisplayItemsProps {
   displayTags: ItemsCategory[];
-  handleMovieClick: (movieId:number ) => void
+  handleMovieClick: (movieId: number) => void;
 }
 
-const DisplayItems: React.FC<DisplayItemsProps> = ({ displayTags,handleMovieClick }) => {
+const DisplayItems: React.FC<DisplayItemsProps> = ({
+  displayTags,
+  handleMovieClick,
+}) => {
   return (
     <>
       {displayTags.map(({ apiEndpoint, itemHeading }) => (
@@ -28,22 +32,21 @@ const DisplayItems: React.FC<DisplayItemsProps> = ({ displayTags,handleMovieClic
 
 //*Category Section Component for rendering movies via categorioes
 
-interface CategorySecProps  extends ItemsCategory{
-  handleMovieClick:(movieId:number) => void
+interface CategorySecProps extends ItemsCategory {
+  handleMovieClick: (movieId: number) => void;
 }
 const CategorySection: React.FC<CategorySecProps> = ({
   apiEndpoint,
   itemHeading,
-  handleMovieClick
-  
+  handleMovieClick,
 }) => {
-  const [movies, setMovies] = useState<Movie[]>([]);
+  const [movies, setMovies] = useState<DataTypes[]>([]);
 
   useEffect(() => {
     const fetchMovies = async () => {
       try {
         const response = await axios.get(apiEndpoint);
-        setMovies(response.data.results.slice(0, 7));
+        setMovies(response.data.results.slice(0,7));
       } catch (error) {
         console.error("Error fetching movies", error);
       }
@@ -62,13 +65,17 @@ const CategorySection: React.FC<CategorySecProps> = ({
       <div className="flex flex-wrap justify-evenly space-x-0  mt-1 mx-4 items-start">
         {movies.map((movie) => (
           <div
-            className="text-neutral-300 flex items-center flex-col justify-center bg-slate-0 rounded-lg bg-gradient-to-r from-green-950 to-cyan-700 pt-4 mt-4 w-64 h-[24rem] m-1 cursor-pointer scale-95 shadow-[0px_1px_5px_1px_#c342426f] hover:scale-100 transition-transform hover:shadow-none duration-300"  onClick={() => handleMovieClick(movie.id)}
+            className="text-neutral-300 flex items-center flex-col justify-center bg-slate-0 rounded-lg bg-gradient-to-r from-green-950 to-cyan-100 pt-4 mt-4 w-64 h-[24rem] m-1 cursor-pointer scale-95 shadow-[0px_1px_5px_1px_#c342426f] hover:scale-100 transition-transform hover:shadow-none duration-300"
+            onClick={() => handleMovieClick(movie.id)}
             key={movie.id}
           >
             <img
               src={`https://image.tmdb.org/t/p/w200/${movie.poster_path}`}
               alt={movie.title || movie.name}
               className="rounded-lg  border-0 w-60 shadow-[0_-10px_12px_1px_#ffea0076] animatetext"
+              onError={(event) => {
+                event.currentTarget.src = noImage;
+              }}
             />
             <div className="p-1">
               <p className=" text-xl p-0 font-bold  text-nowrap truncate-text">

@@ -4,15 +4,16 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import Movies from "./pages/Movies";
 import Navbar from "./components/Navbar";
 import React, { useEffect, useState } from "react";
-import { Movie } from "./modules/types_file";
+import { DataTypes } from "./modules/types_file";
 import { baseUrl, apiKey } from "./modules/ApiLiks";
 import SearchResults from "./components/SearchResults";
 import LoadingOverlay from "./components/LoadingOverlay";
 import Footer from "./components/Footer";
 import MovieOverlay from "./components/MovieOverlay";
+import axios from "axios";
 
 const App = () => {
-  const [searchResults, setSearchResults] = useState<Movie[]>([]); //* to store the searched results from api
+  const [searchResults, setSearchResults] = useState<DataTypes[]>([]); //* to store the searched results from api
   const [isSearching, setIsSearching] = useState(false); //* searching state true/false , also used to choose what to display in Cover when search is triggered
   const [buffering, setBuffering] = useState<boolean>(false); //* loading before fetching movies
   const [searchQuery, setSearchQuery] = React.useState("");
@@ -48,8 +49,8 @@ const App = () => {
       setIsSearching(true); // Indicate searching
       try {
         const searchUrl = `${baseUrl}/search/multi?query=${searchQuery}&api_key=${apiKey}`;
-        const response = await fetch(searchUrl);
-        const data = await response.json();
+        const response = await axios.get(searchUrl);
+        const data = await response.data;
         setTimeout(() => {
           setSearchResults(data.results || []);
         });
