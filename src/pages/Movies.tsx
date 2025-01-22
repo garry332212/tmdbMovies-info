@@ -7,7 +7,7 @@ const Movies = ({ handleMovieClick }: { handleMovieClick: (movieId: number) => v
     createDisplayItems(now_playing, "Now Playing"),
     createDisplayItems(upcoming, "Upcoming"),
     createDisplayItems(popular, "Popular"),
-    createDisplayItems(top_rated_movies, "Top Rated Movies Of All Time"),
+    createDisplayItems(top_rated_movies, "Top Rated Movies"),
   ];
   return (
     <div>

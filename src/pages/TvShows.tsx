@@ -7,7 +7,7 @@ import {
 } from "../modules/ApiLiks";
 import { createDisplayItems, ItemsCategory } from "../modules/types_file";
 
-const TvShows = ({ handleMovieClick }: { handleMovieClick: (movieId: number) => void }) => {
+const TvShows = ({ handleTvClick }: { handleTvClick: (tvId: number) => void }) => {
   const displayCategories: ItemsCategory[] = [
     createDisplayItems(trendingShows, "Trending Shows"),
     createDisplayItems(airing_today, "Watch On Tv 📺"),
@@ -17,7 +17,7 @@ const TvShows = ({ handleMovieClick }: { handleMovieClick: (movieId: number) => 
 
   return (
     <div>
-      <DisplayItems displayTags={displayCategories} handleMovieClick={handleMovieClick}/>
+      <DisplayItems displayTags={displayCategories} handleMovieClick={handleTvClick}/>
     </div>
   );
 };

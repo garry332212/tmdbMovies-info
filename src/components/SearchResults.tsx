@@ -17,13 +17,13 @@ const SearchResults: React.FC<SearchProptType> = ({ searchResults }) => {
             {searchResults.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center flex-col justify-center bg-slate-0 rounded-lg bg-gradient-to-r from-green-950 to-cyan-700 pt-4 mt-4 w-64 h-[26rem] m-1 cursor-pointer scale-95 shadow-[0px_1px_5px_1px_cyan] hover:scale-100 transition-transform hover:shadow-[0px_1px_5px_1px_lime] duration-300"
+                className="text-neutral-300 flex items-center flex-col justify-center bg-slate-0 rounded-lg  pt-4 mt-4 w-64 h-[28rem] m-1 cursor-pointer scale-95 hover:scale-100 hover:shadow-[0px_1px_5px_1px_#ffea0076] duration-200"
               >
                 {/*//! if image not found render a msg img not found */}
                 <img
                   src={`https://image.tmdb.org/t/p/w200/${item.poster_path}`}
                   alt={item.title || item.name}
-                  className="rounded-md  border-0 w-60 h-[20rem] animatetext"
+                  className="rounded-lg  border-0 w-60 hover:shadow-[0_-10px_12px_1px_#ffea0076]"
                   onError={(event) => {
                     event.currentTarget.src = noImage;
                   }}

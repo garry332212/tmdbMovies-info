@@ -4,13 +4,13 @@ import { getFormattedDate } from "../modules/types_file";
 import noImage from "../assets/noImage.jpg";
 import axios from "axios";
 
-interface MovieDetails {
+interface TvDetails {
   id: number;
-  title: string;
+  name: string;
   backdrop_path: string;
   poster_path: string;
   overview: string;
-  release_date: string;
+  first_air_date: string;
   genres: { id: number; name: string }[];
   runtime: number;
   vote_average: number;
@@ -31,66 +31,57 @@ interface MovieCreditResponse {
 
 interface SimilarMovie {
   id: number;
-  title: string;
+  name: string;
   poster_path: string;
 }
 
-interface Trailer {
-  id: string;
-  key: string;
-  name: string;
-  type: string;
-}
 
-const MovieOverlay = ({
-  movieId,
+const TvOverlay = ({
+  tvId,
   isOpen,
   onClose,
 }: {
-  movieId: number | null;
+  tvId: number | null;
   isOpen: boolean;
   onClose: () => void;
 }) => {
-  const [movieDetails, setMovieDetails] = useState<MovieDetails | null>(null);
-  const [movieCredits, setMovieCredits] = useState<CastMember[]>([]);
-  const [similarMovies, setSimilarMovies] = useState<SimilarMovie[]>([]);
-  const [trailers, setTrailers] = useState<Trailer[]>([]);
+  const [tvDetails, setTvDetails] = useState<TvDetails | null>(null);
+  const [tvCredits, setTvCredits] = useState<CastMember[]>([]);
+  const [similarShows, setSimilarShows] = useState<SimilarMovie[]>([]);
+
 
   useEffect(() => {
-    if (!movieId || !isOpen) return;
+    if (!tvId || !isOpen) return;
 
     //Clicking a movie to open the follwoing api links
     const fetchMovieDetails = async () => {
       try {
-        const [detailsRes, creditsRes, similarRes, trailersRes] =
+        const [detailsRes, creditsRes, similarRes] =
           await Promise.all([
-            axios.get(`${baseUrl}/movie/${movieId}?api_key=${apiKey}`),
-            axios.get(`${baseUrl}/movie/${movieId}/credits?api_key=${apiKey}`),
-            axios.get(`${baseUrl}/movie/${movieId}/similar?api_key=${apiKey}`),
-            axios.get(`${baseUrl}/movie/${movieId}/videos?api_key=${apiKey}`),
-            axios.get(`${baseUrl}/movie/${movieId}/videos?api_key=${apiKey}`),
+            axios.get(`${baseUrl}/tv/${tvId}?api_key=${apiKey}`),
+            axios.get(`${baseUrl}/tv/${tvId}/credits?api_key=${apiKey}`),
+            axios.get(`${baseUrl}/tv/${tvId}/similar?api_key=${apiKey}`),
+            axios.get(`${baseUrl}/tv/${tvId}/videos?api_key=${apiKey}`),
           ]);
 
-        const detailsData: MovieDetails = await detailsRes.data;
+        const detailsData: TvDetails = await detailsRes.data;
         const creditsData: MovieCreditResponse = await creditsRes.data;
         const similarData: { results: SimilarMovie[] } = await similarRes.data;
-        const trailersData: { results: Trailer[] } = await trailersRes.data;
+        
 
-        setMovieDetails(detailsData);
-        setMovieCredits(creditsData.cast);
-        setSimilarMovies(similarData.results);
-        setTrailers(
-          trailersData.results.filter((video) => video.type === "Trailer")
-        );
+        setTvDetails(detailsData);
+        setTvCredits(creditsData.cast);
+        setSimilarShows(similarData.results);
+
       } catch (error) {
         console.error("Error fetching movie data:", error);
       }
     };
 
     fetchMovieDetails();
-  }, [movieId, isOpen]);
+  }, [tvId, isOpen]);
 
-  if (!isOpen || !movieDetails) return null;
+  if (!isOpen || !tvDetails) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50 overflow-y-auto  ">
@@ -106,64 +97,49 @@ const MovieOverlay = ({
         {/*//! Movie Photo and Title */}
         <div className="flex flex-col gap-4  ">
           <img
-            src={`https://image.tmdb.org/t/p/original${movieDetails.backdrop_path}`}
-            alt={movieDetails.title}
+            src={`https://image.tmdb.org/t/p/original${tvDetails.backdrop_path}`}
+            alt={tvDetails.name}
             className="rounded-lg max-h-[28rem] object-cover"
           />
           <div className="flex flex-col">
             <div className="flex justify-between items-center flex-wrap ">
               <div className="">
                 <h2 className="sm:text-5xl text-2xl font-bold movieTitle text-orange-600">
-                  {movieDetails.title}
+                  {tvDetails.name}
                 </h2>
                 <p className="sm:text-xl text-sm text-gray-400">
-                  {movieDetails.tagline}
+                  {tvDetails.tagline}
                 </p>
                 <p className="sm:text-lg text-sm text-neutral-300 overviewText">
                   Genres:{" "}
-                  {movieDetails.genres.map((genre) => genre.name).join(", ")}
+                  {tvDetails.genres.map((genre) => genre.name).join(", ")}
                 </p>
               </div>
               <div className="info">
-                <p className="sm:text-lg text-sm text-gray-400">
-                  Runtime: {movieDetails.runtime} Minutes
-                </p>
+              
                 <p className="sm:text-xl text-sm text-gray-400">
-                  {getFormattedDate(movieDetails.release_date)}
+                  {getFormattedDate(tvDetails.first_air_date)}
                 </p>
               </div>
             </div>
 
             <p className=" sm:text-2xl mt-4 text-gray-300 text-xl overviewText">
-              {movieDetails.overview}
+              {tvDetails.overview}
             </p>
           </div>
         </div>
 
-        <div className="flex justify-between flex-wrap sm:flex-nowrap  ">
-          {/*//! Trailers */}
-          <div className="mt-6 w-full">
-            <h3 className=" text-2xl font-bold mb-4 ">Trailer</h3>
-
-            {trailers.length > 0 && (
-              <iframe
-                key={trailers[0].id} // Use the first trailer
-                src={`https://www.youtube.com/embed/${trailers[0].key}`}
-                title={trailers[0].name}
-                allowFullScreen
-                className="rounded-lg w-full h-80 sm:w-full sm:h-80"
-              ></iframe>
-            )}
-          </div>
+        <div className="flex justify-center flex-wrap sm:flex-nowrap  ">
+         
 
           {/*//! Cast */}
-          <div className="mt-6 xl:w-[38rem] w-full">
+          <div className="my-6  w-full">
             <h3 className="text-2xl font-bold mb-4 text-center">Cast</h3>
             <div
               className="flex items-end justify-center flex-wrap space-x-3 space-y-3
             "
             >
-              {movieCredits.slice(0, 10).map((cast) => (
+              {tvCredits.map((cast) => (
                 <div
                   key={cast.id}
                   className="flex-shrink-0 flex-wrap text-center w-20"
@@ -183,23 +159,23 @@ const MovieOverlay = ({
         {/*//! Similar Movies */}
         <div className="mt-6 ">
           <h3 className="text-2xl font-bold mb-4 text-center">
-            Similar Movies
+            Similar Shows
           </h3>
           <div className="flex justify-around flex-wrap ">
-            {similarMovies.slice(0, 7).map((movie) => (
+            {similarShows.slice(0, 7).map((tv) => (
               <div
-                key={movie.id}
+                key={tv.id}
                 className="flex flex-col w-40 justify-start items-center mx-1"
               >
                 <img
-                  src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
-                  alt={movie.title}
+                  src={`https://image.tmdb.org/t/p/w200${tv.poster_path}`}
+                  alt={tv.name}
                   className="rounded-lg h-60 w-full"
                   onError={(event) => {
                     event.currentTarget.src = noImage;
                   }}
                 />
-                <p className="text-sm max-w-40 p-2">{movie.title}</p>
+                <p className="text-sm max-w-40 p-2">{tv.name}</p>
               </div>
             ))}
           </div>
@@ -209,4 +185,4 @@ const MovieOverlay = ({
   );
 };
 
-export default MovieOverlay;
+export default TvOverlay;

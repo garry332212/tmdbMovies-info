@@ -11,19 +11,25 @@ import LoadingOverlay from "./components/LoadingOverlay";
 import Footer from "./components/Footer";
 import MovieOverlay from "./components/MovieOverlay";
 import axios from "axios";
+import TvOverlay from "./components/TvOverlay";
 
 const App = () => {
   const [searchResults, setSearchResults] = useState<DataTypes[]>([]); //* to store the searched results from api
   const [isSearching, setIsSearching] = useState(false); //* searching state true/false , also used to choose what to display in Cover when search is triggered
   const [buffering, setBuffering] = useState<boolean>(false); //* loading before fetching movies
   const [searchQuery, setSearchQuery] = React.useState("");
-  const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const location = useLocation(); //* To track the current route
 
   // Handle modal movie click
   const handleMovieClick = (movieId: number) => {
-    setSelectedMovieId(movieId);
+    setSelectedId(movieId);
+    setIsModalOpen(true);
+  };
+  const handleTvClick = (tvId: number) => {
+    setSelectedId(tvId);
     setIsModalOpen(true);
   };
 
@@ -78,10 +84,15 @@ const App = () => {
             <Routes>
               <Route path="/" element={<Home handleMovieClick={handleMovieClick}/>} />
               <Route path="movies" element={<Movies handleMovieClick={handleMovieClick}/>} />
-              <Route path="tvshows" element={<TvShows handleMovieClick={handleMovieClick}/>} />
+              <Route path="tvshows" element={<TvShows handleTvClick={handleTvClick}/>} />
             </Routes>
             <MovieOverlay
-                movieId={selectedMovieId}
+                movieId={selectedId}
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+              />
+            <TvOverlay
+                tvId={selectedId}
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
               />
