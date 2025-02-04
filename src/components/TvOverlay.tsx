@@ -85,7 +85,7 @@ const TvOverlay = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50 overflow-y-auto  ">
-      <div className="relative bg-gray-900 text-white rounded-lg max-w-7xl w-auto h-[50rem] overflow-y-auto scrollable-div">
+      <div className="relative bg-gray-900 text-white rounded-lg max-w-8xl w-auto h-[55rem] overflow-y-auto scrollable-div">
         {/*//! Close Button */}
         <button
           className="absolute top-2 right-4 text-3xl font-bold hover:scale-125 duration-300 "
@@ -99,7 +99,7 @@ const TvOverlay = ({
           <img
             src={`https://image.tmdb.org/t/p/original${tvDetails.backdrop_path}`}
             alt={tvDetails.name}
-            className="rounded-lg max-h-[28rem] object-cover"
+            className="rounded-lg max-h-[36rem] object-cover"
           />
           <div className="flex flex-col">
             <div className="flex justify-between items-center flex-wrap ">
