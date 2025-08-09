@@ -49,7 +49,7 @@ const Footer: React.FC = () => {
               <img src={ytLogo} alt="YouTube" className="h-8 w-8" />
             </a>
             <a
-              href="https://github.com/your-profile"
+              href="https://github.com/garry332212"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-gray-400 transition-colors"
@@ -71,8 +71,11 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Bottom Section */}
-        <div className="mt-8 text-center text-sm text-gray-500">
-          © {new Date().getFullYear()} TSX-Movies. All rights reserved.
+        <div className="mt-8 flex flex-col  text-sm text-gray-500">
+          <p className="mt-8  ">
+            {new Date().getFullYear()} TSX-Movies. All rights reserved ©
+          </p>
+          <p> Created by Gurvinder Singh</p>
         </div>
       </div>
     </footer>
